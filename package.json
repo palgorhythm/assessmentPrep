@@ -2,9 +2,8 @@
   "name": "assessmentprep",
   "version": "1.0.0",
   "description": "todo fullstack app with node/express, vanilla frontend, mongoDB/ PSQL backend",
-  "main": "index.js",
   "scripts": {
-    "start": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon ./server/server.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +14,13 @@
   "bugs": {
     "url": "https://github.com/richardsjacob/assessmentPrep/issues"
   },
-  "homepage": "https://github.com/richardsjacob/assessmentPrep#readme"
+  "homepage": "https://github.com/richardsjacob/assessmentPrep#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1",
+    "path": "^0.12.7",
+    "pg": "^7.11.0"
+  }
 }

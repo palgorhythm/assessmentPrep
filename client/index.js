@@ -4,17 +4,47 @@ const usernameInput = document.querySelector('#username-input');
 const passwordInput = document.querySelector('#password-input');
 
 loginButton.addEventListener('click', e => {
-  console.log(usernameInput.value, passwordInput.value)
+  fetch('/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      uname: usernameInput.value,
+      pw: passwordInput.value
+    })
+  })
+  .then(res => {
+    return res.json();
+  })
+  .then(data => {
+    if (data !== 'you are not a user') {
+      onLogin(usernameInput.value);
+    }
+  });
 });
 
 signupButton.addEventListener('click', e => {
-  console.log(usernameInput.value, passwordInput.value)
+  fetch('/signup', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      uname: usernameInput.value,
+      pw: passwordInput.value
+    })
+  })
+  .then(() => {
+    onLogin(usernameInput.value);
+  });
 });
 
 const toDoContainer = document.querySelector('#to-do');
 
-const toDoCreator = text => {
+const toDoCreator = (text, todo_id) => {
   const toDoArticle = document.createElement('article');
+  toDoArticle.dataset.todo_id = todo_id;
 
   const toDoText = document.createElement('p');
   toDoText.innerText = text;
@@ -24,6 +54,15 @@ const toDoCreator = text => {
 
   deleteButton.addEventListener('click', e => {
     toDoArticle.parentNode.removeChild(toDoArticle);
+    fetch('/deleteTodo', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        todo_id
+      })
+    });
   });
 
   toDoArticle.appendChild(toDoText);
@@ -34,31 +73,32 @@ const toDoCreator = text => {
   return toDoArticle;
 }
 
-// things to only do once logged in:
+const onLogin = async username => {
+  const toDoFetch = await fetch(`/getAllTodos/${username}`);
+  const toDos = await toDoFetch.json();
 
-const toDos = ['finish werkshop', 'get quesadillos', 'get a job'];
-
-const title = document.createElement('h1');
-title.innerText = 'To Do:';
-toDoContainer.appendChild(title);
-
-const toDoList = document.createElement('section');
-
-toDos.forEach(toDo => {
-  toDoList.appendChild(toDoCreator(toDo));
-});
-
-toDoContainer.appendChild(toDoList);
-
-const toDoInput = document.createElement('textarea');
-toDoContainer.appendChild(toDoInput);
-
-const submitButton = document.createElement('button');
-submitButton.innerText = 'Submit!';
-submitButton.addEventListener('click', e => {
-  toDoList.appendChild(toDoCreator(toDoInput.value));
-  toDoInput.value = '';
-});
-
-toDoContainer.appendChild(document.createElement('br'));
-toDoContainer.appendChild(submitButton);
+  const title = document.createElement('h1');
+  title.innerText = 'To Do:';
+  toDoContainer.appendChild(title);
+  
+  const toDoList = document.createElement('section');
+  
+  toDos.forEach(({text, todo_id}) => {
+    toDoList.appendChild(toDoCreator(text, todo_id));
+  });
+  
+  toDoContainer.appendChild(toDoList);
+  
+  const toDoInput = document.createElement('textarea');
+  toDoContainer.appendChild(toDoInput);
+  
+  const submitButton = document.createElement('button');
+  submitButton.innerText = 'Submit!';
+  submitButton.addEventListener('click', e => {
+    toDoList.appendChild(toDoCreator(toDoInput.value));
+    toDoInput.value = '';
+  });
+  
+  toDoContainer.appendChild(document.createElement('br'));
+  toDoContainer.appendChild(submitButton);
+}
