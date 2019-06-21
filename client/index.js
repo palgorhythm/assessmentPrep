@@ -1,3 +1,15 @@
+const loginButton = document.querySelector('#login-button');
+const signupButton = document.querySelector('#signup-button');
+const usernameInput = document.querySelector('#username-input');
+const passwordInput = document.querySelector('#password-input');
+
+loginButton.addEventListener('click', e => {
+  console.log(usernameInput.value, passwordInput.value)
+});
+
+signupButton.addEventListener('click', e => {
+  console.log(usernameInput.value, passwordInput.value)
+});
 
 const toDoContainer = document.querySelector('#to-do');
 
