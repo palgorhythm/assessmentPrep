@@ -1,0 +1,19 @@
+{
+  "name": "assessmentprep",
+  "version": "1.0.0",
+  "description": "todo fullstack app with node/express, vanilla frontend, mongoDB/ PSQL backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richardsjacob/assessmentPrep.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/richardsjacob/assessmentPrep/issues"
+  },
+  "homepage": "https://github.com/richardsjacob/assessmentPrep#readme"
+}
