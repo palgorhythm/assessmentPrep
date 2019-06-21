@@ -74,6 +74,11 @@ const toDoCreator = (text, todo_id) => {
 }
 
 const onLogin = async username => {
+  // we aren't using react so i have to do something like this to prevent extra things from popping up
+  while (toDoContainer.firstChild) {
+    toDoContainer.removeChild(toDoContainer.firstChild);
+  }
+
   const toDoFetch = await fetch(`/getAllTodos/${username}`);
   const toDos = await toDoFetch.json();
 
@@ -95,8 +100,22 @@ const onLogin = async username => {
   const submitButton = document.createElement('button');
   submitButton.innerText = 'Submit!';
   submitButton.addEventListener('click', e => {
-    toDoList.appendChild(toDoCreator(toDoInput.value));
-    toDoInput.value = '';
+    fetch('/newTodo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        uname: username,
+        text: toDoInput.value
+      })
+    })
+    .then(res => res.json())
+    .then(({todo_id}) => {
+      // GET ID FROM QUERY AND ADD TO DATASET ???
+      toDoList.appendChild(toDoCreator(toDoInput.value, todo_id));
+      toDoInput.value = '';
+    });
   });
   
   toDoContainer.appendChild(document.createElement('br'));
