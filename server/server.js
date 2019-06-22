@@ -5,14 +5,12 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const userController = require('./controllers/sql/userController');
 const todoController = require('./controllers/sql/todoController');
-const cookieController = require('./controllers/sql/cookieController');
-const sessionController = require('./controllers/sql/sessionController');
+// const cookieController = require('./controllers/sql/cookieController');
+// const sessionController = require('./controllers/sql/sessionController');
 
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../', 'client'))); // serves all static files located in the client folder
-
-app.get('/');
 
 app.post('/signup', userController.signup, (req, res) => {
   res.status(200).send('u signed up!');
