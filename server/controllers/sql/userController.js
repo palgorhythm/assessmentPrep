@@ -6,7 +6,7 @@ const pool = new Pool({
 const controller = {};
 
 controller.signup = (req, res, next) => {
-  console.log(req.body.uname, req.body.pw);
+  
   pool.query(
     'INSERT INTO Users (uname, pw) VALUES ($1, $2);',
     [req.body.uname, req.body.pw],
@@ -18,12 +18,13 @@ controller.signup = (req, res, next) => {
   );
 };
 controller.login = (req, res, next) => {
+  console.log(req.body.uname, req.body.pw);
   pool.query(
     'SELECT * FROM Users WHERE uname=$1 AND pw=$2;',
     [req.body.uname, req.body.pw],
     (error, result) => {
       if (error) next(error);
-      res.locals.result = result.rows[0]; // result is undefined if there's no matching row.
+      res.locals.result = result.rows[0] || 'you are not a user'; // result is undefined if there's no matching row.
       next();
     }
   );

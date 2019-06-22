@@ -9,6 +9,7 @@ const todoController = require('./controllers/sql/todoController');
 // const sessionController = require('./controllers/sql/sessionController');
 
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}))
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../', 'client'))); // serves all static files located in the client folder
 

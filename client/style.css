@@ -1,0 +1,39 @@
+body {
+  font-family: sans-serif;
+  box-sizing: border-box;
+  background: antiquewhite;
+}
+
+span {
+  font-size: 20px;
+}
+
+input {
+  margin: 10px 0 10px 0;
+}
+
+button {
+  font-size: 20px;
+}
+
+button:hover {
+  cursor: pointer;
+}
+
+nav {
+  margin-bottom: 40px;
+}
+
+.to-do-container {
+  background: pink;
+  border-radius: 10px;
+  width: 400px;
+  font-size: 30px;
+  padding: 10px;
+  margin: 20px;
+}
+
+.to-do-container:hover {
+  background: 10px 10px rgb(253, 216, 222);
+  box-shadow: 10px 10px rgb(233, 96, 119);
+}
