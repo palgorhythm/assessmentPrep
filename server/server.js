@@ -5,20 +5,39 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const userController = require('./controllers/sql/userController');
 const todoController = require('./controllers/sql/todoController');
-// const cookieController = require('./controllers/sql/cookieController');
-// const sessionController = require('./controllers/sql/sessionController');
+const cookieController = require('./controllers/sql/cookieController');
+const sessionController = require('./controllers/sql/sessionController');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}))
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../', 'client'))); // serves all static files located in the client folder
 
-app.post('/signup', userController.signup, (req, res) => {
-  res.status(200).send('u signed up!');
+// for session persistence
+app.get('/checkSession', sessionController.isLoggedIn, (req, res) => {
+  // console.log(res.locals.result);
+  res.status(200).send(res.locals.result);
 });
-app.post('/login', userController.login, (req, res) => {
-  res.status(200).json(res.locals.result);
-});
+
+app.post(
+  '/signup',
+  userController.signup,
+  sessionController.startSession,
+  cookieController.setSSIDCookie,
+  (req, res) => {
+    res.status(200).send('u signed up!');
+  }
+);
+app.post(
+  '/login',
+  userController.login,
+  sessionController.startSession,
+  cookieController.setSSIDCookie,
+  (req, res) => {
+    res.status(200).json(res.locals.result);
+  }
+);
+
 app.get('/getAllTodos/:uname', todoController.getAllTodos, (req, res) => {
   res.status(200).json(res.locals.result);
 });

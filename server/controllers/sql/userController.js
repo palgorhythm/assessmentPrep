@@ -6,12 +6,12 @@ const pool = new Pool({
 const controller = {};
 
 controller.signup = (req, res, next) => {
-  
   pool.query(
-    'INSERT INTO Users (uname, pw) VALUES ($1, $2);',
+    'INSERT INTO Users (uname, pw) VALUES ($1, $2) RETURNING (uname);',
     [req.body.uname, req.body.pw],
     (error, result) => {
       if (error) console.log(error);
+      res.locals.result = result.rows[0].uname;
       console.log('created a user!');
       next();
     }
@@ -23,9 +23,10 @@ controller.login = (req, res, next) => {
     'SELECT * FROM Users WHERE uname=$1 AND pw=$2;',
     [req.body.uname, req.body.pw],
     (error, result) => {
-      if (error) next(error);
-      res.locals.result = result.rows[0] || 'you are not a user'; // result is undefined if there's no matching row.
-      next();
+      if (error) return next(error);
+      if (!result.rows[0]) return next('you are not a user');
+      res.locals.result = result.rows[0].uname; // result is undefined if there's no matching row.
+      return next();
     }
   );
 };

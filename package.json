@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "todo fullstack app with node/express, vanilla frontend, mongoDB/ PSQL backend",
   "scripts": {
-    "start": "nodemon ./server/server.js"
+    "start": "nodemon ./server/server.js",
+    "resetData": "node ./server/resetDB.js"
   },
   "repository": {
     "type": "git",

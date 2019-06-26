@@ -5,26 +5,32 @@ const pool = new Pool({
 });
 const controller = {};
 /////////
-controller.isLoggedIn = (req, res, next) => {
+
+controller.startSession = (req, res, next) => {
+  console.log('\n---invoking startSession middleware---');
+  const randomSSID = Math.floor(Math.random() * 1000);
+
   pool.query(
-    'SELECT * FROM Todos WHERE uname=$1;',
-    [req.params.uname],
-    (error, result) => {
-      if (error) console.log(error);
-      res.locals.result = result.rows;
+    'INSERT INTO Sessions (cookie_id,user_id) VALUES ($1,$2) RETURNING cookie_id, user_id;',
+    [randomSSID, res.locals.result],
+    (err, result) => {
+      if (err) return next('\nDB ERROR CREATING A SESSION:\n' + err);
+      res.locals.ssid = result.rows[0].cookie_id;
+      console.log('Session row successfuly created = ', res.locals.ssid);
       next();
     }
   );
 };
-controller.startSession = (req, res, next) => {
-  // need to send in the todo_id to this!!
+
+controller.isLoggedIn = (req, res, next) => {
   pool.query(
-    'DELETE FROM Todos WHERE todo_id=$1',
-    [req.body.todo_id],
+    'SELECT * FROM Sessions WHERE cookie_id=$1 RETURNING (user_id);',
+    [req.cookies.ssid],
     (error, result) => {
-      if (error) console.log(error);
-      console.log('deleted a todo !');
-      next();
+      if (error) return next(error);
+      res.locals.result =
+        result.rows.length > 0 ? result.rows[0].user_id : false;
+      return next();
     }
   );
 };

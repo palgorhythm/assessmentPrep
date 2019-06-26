@@ -11,16 +11,36 @@ const CREATE_USERS_TABLE =
   'CREATE TABLE IF NOT EXISTS Users(user_id SERIAL PRIMARY KEY, uname VARCHAR(100) NOT NULL, pw VARCHAR(100) NOT NULL);';
 
 const CREATE_SESSIONS_TABLE =
-  'CREATE TABLE IF NOT EXISTS Sessions(cookie_id SERIAL PRIMARY KEY, createdAt DATE NOT NULL default CURRENT_DATE);';
+  'CREATE TABLE IF NOT EXISTS Sessions(session_id SERIAL PRIMARY KEY, cookie_id INTEGER NOT NULL, user_id VARCHAR(100) NOT NULL, createdAt DATE NOT NULL default CURRENT_DATE);';
 
-pool.query(CREATE_TODOS_TABLE, (err, res, next) => {
-  console.log('successfully created todos table! ');
-});
+const DROP_TABLES = 'DROP TABLE Todos; DROP TABLE Sessions; DROP TABLE Users;';
 
-pool.query(CREATE_USERS_TABLE, (err, res, next) => {
-  console.log('successfully created Users table! ');
-});
+async function resetData() {
+  await new Promise((resolve, reject) => {
+    pool.query(DROP_TABLES, (err, res, next) => {
+      console.log('successfully dropped all tables ! ');
+      resolve();
+    });
+  });
 
-pool.query(CREATE_SESSIONS_TABLE, (err, res, next) => {
-  console.log('successfully created Sessions table! ');
-});
+  await new Promise((resolve, reject) => {
+    pool.query(CREATE_SESSIONS_TABLE, (err, res, next) => {
+      console.log('successfully created Sessions table! ');
+      resolve();
+    });
+  });
+  await new Promise((resolve, reject) => {
+    pool.query(CREATE_TODOS_TABLE, (err, res, next) => {
+      console.log('successfully created todos table! ');
+      resolve();
+    });
+  });
+  await new Promise((resolve, reject) => {
+    pool.query(CREATE_USERS_TABLE, (err, res, next) => {
+      console.log('successfully created Users table! ');
+      resolve();
+    });
+  });
+}
+
+resetData();
